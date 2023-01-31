@@ -22,15 +22,15 @@ class CalculatorViewController: UIViewController {
     var finalResult = "0.0"
     
     @IBAction func tipChanged(_ sender: UIButton) {
+        guard let buttonTitle = sender.currentTitle else { return }
+        let buttonTitleMinusPercentSign = String(buttonTitle.dropLast())
+        guard let buttonTitleAsAnswer = Double(buttonTitleMinusPercentSign) else { return }
+        tip = buttonTitleAsAnswer / 100
         billTextField.endEditing(true)
         zeroPctButton.isSelected = false
         tenPctButton.isSelected = false
         twentyPctButton.isSelected = false
         sender.isSelected = true
-        guard let buttonTitle = sender.currentTitle else { return }
-        let buttonTitleMinusPercentSign = String(buttonTitle.dropLast())
-        guard let buttonTitleAsAnswer = Double(buttonTitleMinusPercentSign) else { return }
-        tip = buttonTitleAsAnswer / 100
     }
     
     @IBAction func stepperValueChanged(_ sender: UIStepper) {
@@ -39,8 +39,7 @@ class CalculatorViewController: UIViewController {
     }
     
     @IBAction func calculatePressed(_ sender: UIButton) {
-        guard let bill = billTextField.text else { return }
-        guard bill != "" else { return }
+        guard let bill = billTextField.text, !bill.isEmpty else { return }
         guard let billTotal = Double(bill) else { return }
         let result = billTotal * (1.0 + tip) / Double(numberOfPeople)
         finalResult = String(format: "%.2f", result)
